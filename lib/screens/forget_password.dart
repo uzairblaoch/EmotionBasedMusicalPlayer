@@ -1,5 +1,4 @@
 import 'package:emp/layout/SizeConfig.dart';
-import 'package:emp/screens/otp.dart';
 import 'package:flutter/material.dart';
 
 class ForgetPassword extends StatefulWidget {
@@ -68,6 +67,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                       borderRadius: BorderRadius.all(Radius.circular(20))),
                   child: TextFormField(
                     controller: _email,
+                    keyboardType: TextInputType.emailAddress,
                     decoration: InputDecoration(
                         border: InputBorder.none, hintText: "Email"),
                     validator: (value) {

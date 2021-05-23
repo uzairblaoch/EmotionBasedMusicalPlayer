@@ -86,6 +86,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           borderRadius: BorderRadius.all(Radius.circular(20))),
                       child: TextFormField(
                         controller: _email,
+                        keyboardType: TextInputType.emailAddress,
                         decoration: InputDecoration(
                             border: InputBorder.none, hintText: "Email"),
                         validator: (value) {
