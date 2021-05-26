@@ -1,8 +1,10 @@
+import 'package:emp/api/response.dart';
 import 'package:emp/layout/SizeConfig.dart';
 import 'package:emp/screens/forget_password.dart';
 import 'package:emp/screens/signup_page.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key key}) : super(key: key);
@@ -119,13 +121,58 @@ class _LoginPageState extends State<LoginPage> {
                 Column(
                   children: [
                     RaisedButton(
-                      onPressed: () {
+                      onPressed: () async {
                         if (_formKey.currentState.validate()) {
                           setState(() {
                             print(_email.text);
                             print(_password.text);
                           });
-                          Navigator.pushNamed(context, 'home');
+                          var response = await Utils().login(
+                            _email.text,
+                            _password.text,
+                          );
+                          print(response);
+                          if (response['message'] ==
+                              "The selected email is invalid.") {
+                            Fluttertoast.showToast(
+                                msg: response['message'],
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.CENTER,
+                                timeInSecForIosWeb: 1,
+                                backgroundColor: Colors.red,
+                                textColor: Colors.white,
+                                fontSize: 16.0);
+                          } else if (response['message'] ==
+                              "Invalid Password") {
+                            Fluttertoast.showToast(
+                                msg: response['message'],
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.CENTER,
+                                timeInSecForIosWeb: 1,
+                                backgroundColor: Colors.red,
+                                textColor: Colors.white,
+                                fontSize: 16.0);
+                          } else if (response['message'] ==
+                              "Invalid Password") {
+                            Fluttertoast.showToast(
+                                msg: response['message'],
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.CENTER,
+                                timeInSecForIosWeb: 1,
+                                backgroundColor: Colors.red,
+                                textColor: Colors.white,
+                                fontSize: 16.0);
+                          } else {
+                            Fluttertoast.showToast(
+                                msg: response['message'],
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.CENTER,
+                                timeInSecForIosWeb: 1,
+                                backgroundColor: Colors.red,
+                                textColor: Colors.white,
+                                fontSize: 16.0);
+                            Navigator.pushNamed(context, 'home');
+                          }
                         }
                       },
                       elevation: 0,

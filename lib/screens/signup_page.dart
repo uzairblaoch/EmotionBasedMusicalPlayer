@@ -1,5 +1,7 @@
+import 'package:emp/api/response.dart';
 import 'package:emp/layout/SizeConfig.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class SignUpPage extends StatefulWidget {
   SignUpPage({Key key}) : super(key: key);
@@ -11,9 +13,11 @@ class SignUpPage extends StatefulWidget {
 class _SignUpPageState extends State<SignUpPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool _obscureText = true;
-  final _name = TextEditingController();
+  final first_name = TextEditingController();
+  final last_name = TextEditingController();
   final _email = TextEditingController();
   final _password = TextEditingController();
+  final _confirmPassword = TextEditingController();
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -65,12 +69,32 @@ class _SignUpPageState extends State<SignUpPage> {
                           color: Theme.of(context).dividerColor,
                           borderRadius: BorderRadius.all(Radius.circular(20))),
                       child: TextFormField(
-                        controller: _name,
+                        controller: first_name,
                         decoration: InputDecoration(
-                            border: InputBorder.none, hintText: "Name"),
+                            border: InputBorder.none, hintText: "First Name"),
                         validator: (value) {
                           if (value.isEmpty) {
-                            return 'Please Enter Name';
+                            return 'Please Enter First Name';
+                          }
+                        },
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Container(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                      decoration: BoxDecoration(
+                          color: Theme.of(context).dividerColor,
+                          borderRadius: BorderRadius.all(Radius.circular(20))),
+                      child: TextFormField(
+                        controller: last_name,
+                        decoration: InputDecoration(
+                            border: InputBorder.none, hintText: "Last Name"),
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return 'Please Enter Last Name';
                           }
                         },
                       ),
@@ -144,18 +168,86 @@ class _SignUpPageState extends State<SignUpPage> {
                         },
                       ),
                     ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    Container(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                      decoration: BoxDecoration(
+                          color: Theme.of(context).dividerColor,
+                          borderRadius: BorderRadius.all(Radius.circular(20))),
+                      child: TextFormField(
+                        controller: _confirmPassword,
+                        obscureText: _obscureText,
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText: "Confirm Password",
+                          suffixIcon: InkWell(
+                            onTap: _togglePasswordView,
+                            child: Icon(
+                              _obscureText
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                              color: Theme.of(context).dividerColor,
+                            ),
+                          ),
+                        ),
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return 'Please Enter Confirm Password';
+                          } else {
+                            var pass = value;
+                            String pattern =
+                                r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
+                            bool passValid = RegExp(pattern).hasMatch(pass);
+                            if (!passValid) {
+                              return 'Mininum 8 @ Upper,Lower & Special Charaters';
+                            }
+                          }
+                        },
+                      ),
+                    ),
                   ],
                 ),
                 Column(
                   children: [
                     RaisedButton(
-                      onPressed: () {
+                      onPressed: () async {
                         if (_formKey.currentState.validate()) {
                           setState(() {
-                            print(_name.text);
+                            print(first_name.text);
+                            print(last_name.text);
                             print(_email.text);
                             print(_password.text);
+                            print(_confirmPassword.text);
                           });
+                          var response = await Utils().register(
+                              first_name.text,
+                              last_name.text,
+                              _email.text,
+                              _password.text,
+                              _confirmPassword.text);
+                          if (response['message'] ==
+                              "The email has already been taken.") {
+                            Fluttertoast.showToast(
+                                msg: response['message'],
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.CENTER,
+                                timeInSecForIosWeb: 1,
+                                backgroundColor: Colors.red,
+                                textColor: Colors.white,
+                                fontSize: 16.0);
+                          } else {
+                            Fluttertoast.showToast(
+                                msg: response['message'],
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.CENTER,
+                                timeInSecForIosWeb: 1,
+                                backgroundColor: Colors.red,
+                                textColor: Colors.white,
+                                fontSize: 16.0);
+                          }
                           Navigator.pop(context);
                         }
                       },

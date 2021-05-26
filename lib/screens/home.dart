@@ -77,90 +77,97 @@ class _HomeState extends State<Home> {
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
-            width: SizeConfig.screenWidth,
-            height: SizeConfig.screenHeight,
-            padding: EdgeInsets.only(
-                left: 20,
-                right: 20,
-                top: SizeConfig.screenHeight * 0.08,
-                bottom: SizeConfig.screenHeight * 0.06),
-            child: Column(
-              children: [
-                Text(
-                  "Detect Mood",
-                  style: Theme.of(context).textTheme.headline1.copyWith(
-                        fontSize: SizeConfig.screenWidth * 0.1,
-                      ),
-                ),
-                Container(
-                  margin: EdgeInsets.all(15),
-                  padding: EdgeInsets.all(15),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(15),
+          width: SizeConfig.screenWidth,
+          height: SizeConfig.screenHeight,
+          padding: EdgeInsets.only(
+              left: 20,
+              right: 20,
+              top: SizeConfig.screenHeight * 0.08,
+              bottom: SizeConfig.screenHeight * 0.06),
+          child: Column(
+            children: [
+              Text(
+                "Detect Mood",
+                style: Theme.of(context).textTheme.headline1.copyWith(
+                      fontSize: SizeConfig.screenWidth * 0.1,
                     ),
-                    border: Border.all(
+              ),
+              Container(
+                margin: EdgeInsets.all(15),
+                padding: EdgeInsets.all(15),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(15),
+                  ),
+                  border: Border.all(
+                    color: Theme.of(context).dividerColor,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
                       color: Theme.of(context).dividerColor,
+                      offset: Offset(2, 2),
+                      spreadRadius: 2,
+                      blurRadius: 1,
                     ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Theme.of(context).dividerColor,
-                        offset: Offset(2, 2),
-                        spreadRadius: 2,
-                        blurRadius: 1,
-                      ),
-                    ],
-                  ),
-                  child: (_imageFile != null)
-                      ? Image.file(_imageFile)
-                      : Image.network('https://i.imgur.com/sUFH1Aq.png'),
+                  ],
                 ),
-                ElevatedButton(
-                  onPressed: () {
-                    selectImage();
-                  },
-                  child: Icon(
-                    Icons.add_a_photo,
-                    size: 25,
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    primary: Theme.of(context).dividerColor,
-                    shape: CircleBorder(),
-                    padding: EdgeInsets.all(24),
-                  ),
+                child: (_imageFile != null)
+                    ? Image.file(_imageFile)
+                    : Image.network('https://i.imgur.com/sUFH1Aq.png'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  selectImage();
+                },
+                child: Icon(
+                  Icons.add_a_photo,
+                  size: 25,
                 ),
-                SizedBox(height: 20),
-                SingleChildScrollView(
-                  child: Column(
-                      children: _identifiedResult != null
-                          ? [
-                              Text(
-                                "Result : ",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: SizeConfig.screenWidth * 0.045),
-                              ),
-                              Card(
-                                elevation: 1.0,
-                                child: Container(
-                                  width: 100,
-                                  margin: EdgeInsets.all(10),
-                                  child: Center(
-                                    child: Text(
-                                      "${_identifiedResult[0]["label"]}",
-                                      style: TextStyle(
-                                          fontSize: 22.0,
-                                          fontWeight: FontWeight.w900),
-                                    ),
+                style: ElevatedButton.styleFrom(
+                  primary: Theme.of(context).dividerColor,
+                  shape: CircleBorder(),
+                  padding: EdgeInsets.all(24),
+                ),
+              ),
+              SizedBox(height: 20),
+              SingleChildScrollView(
+                child: Column(
+                    children: _identifiedResult != null
+                        ? [
+                            Text(
+                              "Result : ",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: SizeConfig.screenWidth * 0.045),
+                            ),
+                            Card(
+                              elevation: 1.0,
+                              child: Container(
+                                width: 100,
+                                margin: EdgeInsets.all(10),
+                                child: Center(
+                                  child: Text(
+                                    "${_identifiedResult[0]["label"]}",
+                                    style: TextStyle(
+                                        fontSize: 22.0,
+                                        fontWeight: FontWeight.w900),
                                   ),
                                 ),
-                              )
-                            ]
-                          : []),
-                ),
-              ],
-            )),
+                              ),
+                            )
+                          ]
+                        : []),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.popAndPushNamed(context, 'musicList');
+                },
+                child: const Text('player_list'),
+              )
+            ],
+          ),
+        ),
       ),
     );
   }

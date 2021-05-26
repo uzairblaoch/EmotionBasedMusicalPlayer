@@ -2,6 +2,8 @@ import 'package:emp/screens/change_password.dart';
 import 'package:emp/screens/forget_password.dart';
 import 'package:emp/screens/home.dart';
 import 'package:emp/screens/login_page.dart';
+import 'package:emp/screens/musicPlayer/screens/music_list.dart';
+import 'package:emp/screens/musicPlayer/screens/music_player.dart';
 import 'package:emp/screens/otp.dart';
 import 'package:emp/screens/signup_page.dart';
 import 'package:emp/theme/app_theme.dart';
@@ -13,7 +15,7 @@ void main() {
     darkTheme: AppTheme.dark,
     themeMode: ThemeMode.system,
     debugShowCheckedModeBanner: false,
-    initialRoute: 'login',
+    initialRoute: 'home',
     routes: {
       'login': (context) => LoginPage(),
       'signup': (context) => SignUpPage(),
@@ -21,6 +23,8 @@ void main() {
       'opt': (context) => Opt(),
       'changePassword': (context) => ChangePassword(),
       'home': (context) => Home(),
+      'musicList': (context) => MusicList(),
+      'musicPlayer': (context) => SongScreen(),
     },
   ));
 }
