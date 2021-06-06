@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class Utils {
-  final String baseUrl = '192.168.10.3:8000';
+  final String baseUrl = 'ebmp.codingoverflow.com';
   register(String first_name, String last_name, String email, String password,
       String confirm_pasword) async {
     var url = Uri.http(baseUrl, '/api/register', {'q': 'dart'});
@@ -40,4 +40,43 @@ class Utils {
       return jsonDecode(responseString);
     }
   }
+  forgot(
+      String email,
+      ) async {
+    var url = Uri.http(baseUrl, '/api/forgot', {'q': 'dart'});
+    final response = await http.post(url, body: {
+      'email': email,
+    });
+    if (response.statusCode == 200) {
+      final responseString = response.body;
+
+      return jsonDecode(responseString);
+    } else if (response.statusCode == 401) {
+      final responseString = response.body;
+      return jsonDecode(responseString);
+    }
+  }
+  checktokenApi(
+      String email,
+      String token
+      ) async {
+    var url = Uri.http(baseUrl, '/api/checkToken', {'q': 'dart'});
+    final response = await http.post(url, body: {
+      'email': email,
+      'token': token
+    });
+    print(email);
+    print(token);
+    print(response);
+    if (response.statusCode == 200) {
+      final responseString = response.body;
+      print(responseString);
+      return jsonDecode(responseString);
+    } else if (response.statusCode == 400) {
+      final responseString = response.body;
+      print(responseString);
+      return jsonDecode(responseString);
+    }
+  }
+
 }

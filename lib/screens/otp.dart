@@ -1,11 +1,15 @@
+import 'package:emp/api/response.dart';
 import 'package:emp/layout/SizeConfig.dart';
 import 'package:emp/screens/change_password.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pin_code_text_field/pin_code_text_field.dart';
 
 class Opt extends StatefulWidget {
-  Opt({Key key}) : super(key: key);
+  final email;
+  Opt({this.email});
+ // Opt({Key key}) : super(key: key);
 
   @override
   _OptState createState() => _OptState();
@@ -86,17 +90,36 @@ class _OptState extends State<Opt> {
                     hasError: hasError,
 
                     onTextChanged: (text) {},
-                    onDone: (text) {
-                      if (text != '2552') {
+                    onDone: (text) async {
+                      print(widget.email);
+                      print(controller.text);
+                      var response = await Utils().checktokenApi(
+                          widget.email,
+                          controller.text
+                      );
+                      print(widget.email);
+                      print(controller.text);
+                      if (response['message'] ==
+                          "Invalid token!") {
+                            setState(() {
+                                thisText = response['message'];
+                              });
+                      }  else {
                         setState(() {
-                          thisText = 'Opps! Wrong Pin';
-                        });
-                      } else {
-                        setState(() {
-                          thisText = '';
+                          thisText = response['message'];
                         });
                         Navigator.pushNamed(context, 'changePassword');
                       }
+                      // if (text != text) {
+                      //   setState(() {
+                      //     thisText = 'Opps! Wrong Pin';
+                      //   });
+                      // } else {
+                      //   setState(() {
+                      //     thisText = '';
+                      //   });
+                      //   Navigator.pushNamed(context, 'changePassword');
+                      // }
                       print("DONE $text");
                       print("DONE CONTROLLER ${controller.text}");
                     },

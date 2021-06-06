@@ -15,7 +15,7 @@ void main() {
     darkTheme: AppTheme.dark,
     themeMode: ThemeMode.system,
     debugShowCheckedModeBanner: false,
-    initialRoute: 'home',
+    initialRoute: 'login',
     routes: {
       'login': (context) => LoginPage(),
       'signup': (context) => SignUpPage(),

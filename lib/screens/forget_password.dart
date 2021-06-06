@@ -1,5 +1,9 @@
+import 'package:emp/api/response.dart';
 import 'package:emp/layout/SizeConfig.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+
+import 'otp.dart';
 
 class ForgetPassword extends StatefulWidget {
   ForgetPassword({Key key}) : super(key: key);
@@ -89,12 +93,38 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                   height: SizeConfig.screenHeight * 0.08,
                 ),
                 RaisedButton(
-                  onPressed: () {
+                  onPressed: () async{
                     if (_formKey.currentState.validate()) {
                       setState(() {
                         print(_email.text);
                       });
-                      Navigator.pushNamed(context, 'opt');
+                      var response = await Utils().forgot(
+                        _email.text,
+                      );
+                      print(response);
+                      if (response['message'] ==
+                          "User doen't exists") {
+                        Fluttertoast.showToast(
+                            msg: response['message'],
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.CENTER,
+                            timeInSecForIosWeb: 1,
+                            backgroundColor: Colors.red,
+                            textColor: Colors.white,
+                            fontSize: 16.0);
+                      }  else {
+                        Fluttertoast.showToast(
+                            msg: response['message'],
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.CENTER,
+                            timeInSecForIosWeb: 1,
+                            backgroundColor: Colors.red,
+                            textColor: Colors.white,
+                            fontSize: 16.0);
+
+                        Navigator.pushNamed(context, 'opt',arguments: _email.text);
+                      }
+
                     }
                   },
                   elevation: 0,
@@ -108,6 +138,56 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                         fontWeight: FontWeight.bold,
                         fontSize: SizeConfig.screenWidth * 0.045),
                   )),
+                ),
+                RaisedButton(
+                  onPressed: () async{
+                    if (_formKey.currentState.validate()) {
+                      setState(() {
+                        print(_email.text);
+                      });
+                      var response = await Utils().forgot(
+                        _email.text,
+                      );
+                      print(response);
+                      if (response['message'] ==
+                          "User doen't exists") {
+                        Fluttertoast.showToast(
+                            msg: response['message'],
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.CENTER,
+                            timeInSecForIosWeb: 1,
+                            backgroundColor: Colors.red,
+                            textColor: Colors.white,
+                            fontSize: 16.0);
+                      }  else {
+                        Fluttertoast.showToast(
+                            msg: response['message'],
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.CENTER,
+                            timeInSecForIosWeb: 1,
+                            backgroundColor: Colors.red,
+                            textColor: Colors.white,
+                            fontSize: 16.0);
+
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Opt(email: _email.text,)));
+                      }
+
+                    }
+                  },
+                  elevation: 0,
+                  padding: EdgeInsets.all(18),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20)),
+                  child: Center(
+                      child: Text(
+                        "Forget Password",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: SizeConfig.screenWidth * 0.045),
+                      )),
                 ),
               ],
             ),
