@@ -153,7 +153,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                       borderRadius: BorderRadius.circular(20)),
                   child: Center(
                       child: Text(
-                    "Forget Password",
+                    "Change Password",
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: SizeConfig.screenWidth * 0.045),

@@ -40,9 +40,10 @@ class Utils {
       return jsonDecode(responseString);
     }
   }
+
   forgot(
-      String email,
-      ) async {
+    String email,
+  ) async {
     var url = Uri.http(baseUrl, '/api/forgot', {'q': 'dart'});
     final response = await http.post(url, body: {
       'email': email,
@@ -51,20 +52,16 @@ class Utils {
       final responseString = response.body;
 
       return jsonDecode(responseString);
-    } else if (response.statusCode == 401) {
+    } else if (response.statusCode == 404) {
       final responseString = response.body;
       return jsonDecode(responseString);
     }
   }
-  checktokenApi(
-      String email,
-      String token
-      ) async {
+
+  checktokenApi(String email, String token) async {
     var url = Uri.http(baseUrl, '/api/checkToken', {'q': 'dart'});
-    final response = await http.post(url, body: {
-      'email': email,
-      'token': token
-    });
+    final response =
+        await http.post(url, body: {'email': email, 'token': token});
     print(email);
     print(token);
     print(response);
@@ -78,5 +75,4 @@ class Utils {
       return jsonDecode(responseString);
     }
   }
-
 }

@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:emp/api/response.dart';
 import 'package:emp/layout/SizeConfig.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -11,6 +14,7 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
+  Timer _timer;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool _obscureText = true;
   final first_name = TextEditingController();
@@ -193,6 +197,7 @@ class _SignUpPageState extends State<SignUpPage> {
                             ),
                           ),
                         ),
+                        // ignore: missing_return
                         validator: (value) {
                           if (value.isEmpty) {
                             return 'Please Enter Confirm Password';
@@ -203,6 +208,9 @@ class _SignUpPageState extends State<SignUpPage> {
                             bool passValid = RegExp(pattern).hasMatch(pass);
                             if (!passValid) {
                               return 'Mininum 8 @ Upper,Lower & Special Charaters';
+                            } else if (_password.text !=
+                                _confirmPassword.text) {
+                              return 'Password does not match';
                             }
                           }
                         },
@@ -222,6 +230,11 @@ class _SignUpPageState extends State<SignUpPage> {
                             print(_password.text);
                             print(_confirmPassword.text);
                           });
+                          _timer?.cancel();
+                          await EasyLoading.show(
+                            status: 'loading...',
+                            maskType: EasyLoadingMaskType.black,
+                          );
                           var response = await Utils().register(
                               first_name.text,
                               last_name.text,
@@ -230,25 +243,13 @@ class _SignUpPageState extends State<SignUpPage> {
                               _confirmPassword.text);
                           if (response['message'] ==
                               "The email has already been taken.") {
-                            Fluttertoast.showToast(
-                                msg: response['message'],
-                                toastLength: Toast.LENGTH_SHORT,
-                                gravity: ToastGravity.CENTER,
-                                timeInSecForIosWeb: 1,
-                                backgroundColor: Colors.red,
-                                textColor: Colors.white,
-                                fontSize: 16.0);
+                            _timer?.cancel();
+                            await EasyLoading.showError(response['message']);
                           } else {
-                            Fluttertoast.showToast(
-                                msg: response['message'],
-                                toastLength: Toast.LENGTH_SHORT,
-                                gravity: ToastGravity.CENTER,
-                                timeInSecForIosWeb: 1,
-                                backgroundColor: Colors.red,
-                                textColor: Colors.white,
-                                fontSize: 16.0);
+                            _timer?.cancel();
+                            await EasyLoading.showSuccess(response['message']);
+                            Navigator.pop(context);
                           }
-                          Navigator.pop(context);
                         }
                       },
                       elevation: 0,

@@ -34,6 +34,8 @@ dependencies:
   fluttertoast: ^8.0.7
   flutter_xlider: ^3.4.0
   font_awesome_flutter: ^8.8.1
+  http: ^0.13.3
+  flutter_easyloading: ^3.0.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

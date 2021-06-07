@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:emp/api/response.dart';
 import 'package:emp/layout/SizeConfig.dart';
 import 'package:emp/screens/forget_password.dart';
 import 'package:emp/screens/signup_page.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class LoginPage extends StatefulWidget {
@@ -14,6 +17,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  Timer _timer;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool _obscureText = true;
   final _email = TextEditingController();
@@ -127,6 +131,11 @@ class _LoginPageState extends State<LoginPage> {
                             print(_email.text);
                             print(_password.text);
                           });
+                          _timer?.cancel();
+                          await EasyLoading.show(
+                            status: 'loading...',
+                            maskType: EasyLoadingMaskType.black,
+                          );
                           var response = await Utils().login(
                             _email.text,
                             _password.text,
@@ -134,43 +143,15 @@ class _LoginPageState extends State<LoginPage> {
                           print(response);
                           if (response['message'] ==
                               "The selected email is invalid.") {
-                            Fluttertoast.showToast(
-                                msg: response['message'],
-                                toastLength: Toast.LENGTH_SHORT,
-                                gravity: ToastGravity.CENTER,
-                                timeInSecForIosWeb: 1,
-                                backgroundColor: Colors.red,
-                                textColor: Colors.white,
-                                fontSize: 16.0);
+                            _timer?.cancel();
+                            await EasyLoading.showError(response['message']);
                           } else if (response['message'] ==
                               "Invalid Password") {
-                            Fluttertoast.showToast(
-                                msg: response['message'],
-                                toastLength: Toast.LENGTH_SHORT,
-                                gravity: ToastGravity.CENTER,
-                                timeInSecForIosWeb: 1,
-                                backgroundColor: Colors.red,
-                                textColor: Colors.white,
-                                fontSize: 16.0);
-                          } else if (response['message'] ==
-                              "Invalid Password") {
-                            Fluttertoast.showToast(
-                                msg: response['message'],
-                                toastLength: Toast.LENGTH_SHORT,
-                                gravity: ToastGravity.CENTER,
-                                timeInSecForIosWeb: 1,
-                                backgroundColor: Colors.red,
-                                textColor: Colors.white,
-                                fontSize: 16.0);
+                            _timer?.cancel();
+                            await EasyLoading.showError(response['message']);
                           } else {
-                            Fluttertoast.showToast(
-                                msg: response['message'],
-                                toastLength: Toast.LENGTH_SHORT,
-                                gravity: ToastGravity.CENTER,
-                                timeInSecForIosWeb: 1,
-                                backgroundColor: Colors.red,
-                                textColor: Colors.white,
-                                fontSize: 16.0);
+                            _timer?.cancel();
+                            await EasyLoading.showSuccess(response['message']);
                             Navigator.pushNamed(context, 'home');
                           }
                         }

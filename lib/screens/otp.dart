@@ -1,23 +1,26 @@
+import 'dart:async';
+
 import 'package:emp/api/response.dart';
 import 'package:emp/layout/SizeConfig.dart';
 import 'package:emp/screens/change_password.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pin_code_text_field/pin_code_text_field.dart';
 
 class Opt extends StatefulWidget {
-  final email;
-  Opt({this.email});
- // Opt({Key key}) : super(key: key);
+  // final email;
+  // Opt({this.email});
+  Opt({Key key}) : super(key: key);
 
   @override
   _OptState createState() => _OptState();
 }
 
 class _OptState extends State<Opt> {
+  Timer _timer;
   TextEditingController controller = TextEditingController();
-  String thisText = "";
   int pinLength = 4;
   bool hasError = false;
   String errorMessage;
@@ -29,6 +32,7 @@ class _OptState extends State<Opt> {
 
   @override
   Widget build(BuildContext context) {
+    final arguments = ModalRoute.of(context).settings.arguments as Map;
     SizeConfig().init(context);
     return Scaffold(
       body: SingleChildScrollView(
@@ -91,37 +95,25 @@ class _OptState extends State<Opt> {
 
                     onTextChanged: (text) {},
                     onDone: (text) async {
-                      print(widget.email);
-                      print(controller.text);
-                      var response = await Utils().checktokenApi(
-                          widget.email,
-                          controller.text
-                      );
-                      print(widget.email);
-                      print(controller.text);
-                      if (response['message'] ==
-                          "Invalid token!") {
-                            setState(() {
-                                thisText = response['message'];
-                              });
-                      }  else {
-                        setState(() {
-                          thisText = response['message'];
-                        });
-                        Navigator.pushNamed(context, 'changePassword');
+                      if (arguments != null) {
+                        print(arguments['email']);
+                        print(controller.text);
+                        _timer?.cancel();
+                        await EasyLoading.show(
+                          status: 'loading...',
+                          maskType: EasyLoadingMaskType.black,
+                        );
+                        var response = await Utils()
+                            .checktokenApi(arguments['email'], controller.text);
+                        if (response['message'] == "Invalid token!") {
+                          _timer?.cancel();
+                          await EasyLoading.showError(response['message']);
+                        } else {
+                          _timer?.cancel();
+                          await EasyLoading.showSuccess(response['message']);
+                          Navigator.pushNamed(context, 'changePassword');
+                        }
                       }
-                      // if (text != text) {
-                      //   setState(() {
-                      //     thisText = 'Opps! Wrong Pin';
-                      //   });
-                      // } else {
-                      //   setState(() {
-                      //     thisText = '';
-                      //   });
-                      //   Navigator.pushNamed(context, 'changePassword');
-                      // }
-                      print("DONE $text");
-                      print("DONE CONTROLLER ${controller.text}");
                     },
 
                     pinBoxWidth: SizeConfig.screenWidth * 0.18,
@@ -146,38 +138,9 @@ class _OptState extends State<Opt> {
                   ),
                 ),
               ),
-              Center(
-                child: Text(
-                  thisText,
-                  style: Theme.of(context).textTheme.headline1.copyWith(
-                      fontSize: SizeConfig.screenWidth * 0.051,
-                      color: Colors.red),
-                ),
-              ),
               SizedBox(
                 height: SizeConfig.screenHeight * 0.04,
               ),
-              /* RaisedButton(
-                onPressed: () {
-                  setState(() {
-                    var validate = controller.text;
-                    if (validate.length != 4) {
-                      thisText = 'Please enter Opt';
-                    }
-                  });
-                },
-                elevation: 0,
-                padding: EdgeInsets.all(18),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20)),
-                child: Center(
-                    child: Text(
-                  "Verify",
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: SizeConfig.screenWidth * 0.045),
-                )),
-              ),*/
             ],
           ),
         ),
