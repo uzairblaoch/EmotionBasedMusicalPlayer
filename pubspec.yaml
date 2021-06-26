@@ -31,11 +31,11 @@ dependencies:
   pin_code_text_field: ^1.8.0
   image_picker: ^0.7.5+2
   tflite: ^1.1.2
-  fluttertoast: ^8.0.7
   flutter_xlider: ^3.4.0
   font_awesome_flutter: ^8.8.1
   http: ^0.13.3
   flutter_easyloading: ^3.0.0
+  audio_manager:
 dev_dependencies:
   flutter_test:
     sdk: flutter

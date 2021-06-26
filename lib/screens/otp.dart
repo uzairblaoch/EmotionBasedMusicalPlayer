@@ -6,7 +6,6 @@ import 'package:emp/screens/change_password.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pin_code_text_field/pin_code_text_field.dart';
 
 class Opt extends StatefulWidget {

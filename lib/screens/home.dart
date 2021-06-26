@@ -1,3 +1,4 @@
+import 'package:emp/api/response.dart';
 import 'package:emp/layout/SizeConfig.dart';
 import 'package:emp/theme/app_color.dart';
 import 'package:flutter/material.dart';
@@ -160,8 +161,10 @@ class _HomeState extends State<Home> {
                         : []),
               ),
               TextButton(
-                onPressed: () {
+                onPressed: () async {
                   Navigator.popAndPushNamed(context, 'musicList');
+                  // var response = await Utils().fetchSongs();
+                  //print(response);
                 },
                 child: const Text('player_list'),
               )

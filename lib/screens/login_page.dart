@@ -7,7 +7,6 @@ import 'package:emp/screens/signup_page.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key key}) : super(key: key);
@@ -152,7 +151,7 @@ class _LoginPageState extends State<LoginPage> {
                           } else {
                             _timer?.cancel();
                             await EasyLoading.showSuccess(response['message']);
-                            Navigator.pushNamed(context, 'home');
+                            Navigator.pushNamed(context, 'mainScreen');
                           }
                         }
                       },

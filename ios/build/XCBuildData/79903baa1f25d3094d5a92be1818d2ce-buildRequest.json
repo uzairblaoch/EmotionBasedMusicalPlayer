@@ -1,0 +1,59 @@
+{
+  "buildCommand" : "prepareForIndexing",
+  "configuredTargets" : [
+    {
+      "guid" : "2baf47258f3e217983de933bc5531fb388a783a885d8b0b3beb2e9f90bde3f49"
+    }
+  ],
+  "continueBuildingAfterErrors" : true,
+  "enableIndexBuildArena" : false,
+  "hideShellScriptEnvironment" : false,
+  "parameters" : {
+    "action" : "build",
+    "activeArchitecture" : "arm64",
+    "activeRunDestination" : {
+      "disableOnlyActiveArch" : false,
+      "platform" : "iphoneos",
+      "sdk" : "iphoneos14.5",
+      "sdkVariant" : "iphoneos",
+      "supportedArchitectures" : [
+        "arm64v8",
+        "arm64",
+        "armv8"
+      ],
+      "targetArchitecture" : "arm64"
+    },
+    "arenaInfo" : {
+      "buildIntermediatesPath" : "",
+      "buildProductsPath" : "",
+      "derivedDataPath" : "/Users/uzairbaloch/Library/Developer/Xcode/DerivedData",
+      "indexDataStoreFolderPath" : "/Users/uzairbaloch/Library/Developer/Xcode/DerivedData/Runner-bgzqmsjwzrrtojdvoxrqqgdgyhhb/Index/DataStore",
+      "indexEnableDataStore" : true,
+      "indexPCHPath" : "/Users/uzairbaloch/Library/Developer/Xcode/DerivedData/Runner-bgzqmsjwzrrtojdvoxrqqgdgyhhb/Index/PrecompiledHeaders",
+      "pchPath" : ""
+    },
+    "configurationName" : "Debug",
+    "overrides" : {
+      "synthesized" : {
+        "table" : {
+          "ASSETCATALOG_FILTER_FOR_DEVICE_MODEL" : "iPhone8,2",
+          "ASSETCATALOG_FILTER_FOR_DEVICE_OS_VERSION" : "14.5.1",
+          "BUILD_ACTIVE_RESOURCES_ONLY" : "YES",
+          "ENABLE_PREVIEWS" : "NO",
+          "TARGET_DEVICE_IDENTIFIER" : "a878787a5738d9f7f42ce349c243b9afac314691",
+          "TARGET_DEVICE_MODEL" : "iPhone8,2",
+          "TARGET_DEVICE_OS_VERSION" : "14.5.1",
+          "TARGET_DEVICE_PLATFORM_NAME" : "iphoneos"
+        }
+      }
+    }
+  },
+  "qos" : "default",
+  "schemeCommand" : "launch",
+  "shouldCollectMetrics" : false,
+  "showNonLoggedProgress" : true,
+  "useDryRun" : true,
+  "useImplicitDependencies" : true,
+  "useLegacyBuildLocations" : false,
+  "useParallelTargets" : true
+}

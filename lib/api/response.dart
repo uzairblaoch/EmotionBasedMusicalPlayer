@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:emp/Models/searchSongs.dart';
 import 'package:http/http.dart' as http;
 
 class Utils {
@@ -62,8 +63,8 @@ class Utils {
     var url = Uri.http(baseUrl, '/api/checkToken', {'q': 'dart'});
     final response =
         await http.post(url, body: {'email': email, 'token': token});
-    print(email);
-    print(token);
+    // print(email);
+    // print(token);
     print(response);
     if (response.statusCode == 200) {
       final responseString = response.body;
@@ -75,4 +76,20 @@ class Utils {
       return jsonDecode(responseString);
     }
   }
+
+  Future<SearchSongs> fetchSongs() async {
+    var url = Uri.parse('https://api.deezer.com/search?q=hindi songs');
+    final response = await http.get(url);
+    //print(response.body);
+    return SearchSongs.fromJson(jsonDecode(response.body));
+  }
+
+  /*getMe() async {
+    var url = Uri.parse('https://api.deezer.com/search?q=Sad Songs');
+    final response = await http.get(url);
+    if (response.statusCode == 200) {
+      final String responseString = response.body;
+      return (jsonDecode(responseString));
+    }
+  }*/
 }

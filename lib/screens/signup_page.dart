@@ -4,7 +4,6 @@ import 'package:emp/api/response.dart';
 import 'package:emp/layout/SizeConfig.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 class SignUpPage extends StatefulWidget {
   SignUpPage({Key key}) : super(key: key);

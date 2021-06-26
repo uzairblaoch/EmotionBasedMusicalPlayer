@@ -1,11 +1,10 @@
 import 'dart:io';
-
+import 'package:emp/screens/bottomNavbar.dart';
 import 'package:emp/screens/change_password.dart';
 import 'package:emp/screens/forget_password.dart';
 import 'package:emp/screens/home.dart';
 import 'package:emp/screens/login_page.dart';
-import 'package:emp/screens/musicPlayer/screens/music_list.dart';
-import 'package:emp/screens/musicPlayer/screens/music_player.dart';
+import 'package:emp/screens/musicPlayer/songsList.dart';
 import 'package:emp/screens/otp.dart';
 import 'package:emp/screens/signup_page.dart';
 import 'package:emp/theme/app_theme.dart';
@@ -20,7 +19,7 @@ void main() {
     themeMode: ThemeMode.system,
     debugShowCheckedModeBanner: false,
     builder: EasyLoading.init(),
-    initialRoute: 'login',
+    initialRoute: 'mainScreen',
     routes: {
       'login': (context) => LoginPage(),
       'signup': (context) => SignUpPage(),
@@ -28,8 +27,9 @@ void main() {
       'opt': (context) => Opt(),
       'changePassword': (context) => ChangePassword(),
       'home': (context) => Home(),
-      'musicList': (context) => MusicList(),
-      'musicPlayer': (context) => SongScreen(),
+      'mainScreen':(context) => BottomBar(),
+      'musicList': (context) => SongsList(),
+      //'musicPlayer': (context) => SongScreen(),
     },
   ));
 }
