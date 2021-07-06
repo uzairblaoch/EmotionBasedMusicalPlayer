@@ -1,5 +1,9 @@
+import 'dart:async';
+
+import 'package:emp/api/response.dart';
 import 'package:emp/layout/SizeConfig.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 class ChangePassword extends StatefulWidget {
   ChangePassword({Key key}) : super(key: key);
@@ -9,12 +13,14 @@ class ChangePassword extends StatefulWidget {
 }
 
 class _ChangePasswordState extends State<ChangePassword> {
+  Timer _timer;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final _password = TextEditingController();
   final _confirmPassword = TextEditingController();
   bool _obscureText = true;
   @override
   Widget build(BuildContext context) {
+     final arguments = ModalRoute.of(context).settings.arguments as Map;
     SizeConfig().init(context);
     return Form(
       key: _formKey,
@@ -135,16 +141,38 @@ class _ChangePasswordState extends State<ChangePassword> {
                   height: SizeConfig.screenHeight * 0.08,
                 ),
                 RaisedButton(
-                  onPressed: () {
+                  onPressed: () async {
                     if (_formKey.currentState.validate()) {
-                      setState(() {
+                     /* setState(() {
                         print(_password.text);
                         print(_confirmPassword.text);
-                      });
-                      Navigator.popUntil(
+                      });*/
+                     
+                     if (arguments != null) {
+                        print(arguments['token']);
+                       // print(controller.text);
+                        _timer?.cancel();
+                        await EasyLoading.show(
+                          status: 'loading...',
+                          maskType: EasyLoadingMaskType.black,
+                        );
+                        var response = await Utils()
+                            .reset(arguments['token'], _password.text,_confirmPassword.text);
+                        if (response['message'] == "Invalid token!") {
+                          _timer?.cancel();
+                          await EasyLoading.showError(response['message']);
+                        } else {
+                          _timer?.cancel();
+                          await EasyLoading.showSuccess(response['message']);
+                          
+                         Navigator.popUntil(
                         context,
                         ModalRoute.withName('login'),
                       );
+                        }
+                      }
+                     
+                      
                     }
                   },
                   elevation: 0,

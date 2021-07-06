@@ -10,16 +10,23 @@ import 'package:emp/screens/signup_page.dart';
 import 'package:emp/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-void main() {
-   HttpOverrides.global = new MyHttpOverrides();
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  var prefs = await SharedPreferences.getInstance();
+  var isLoggedIn = (prefs.getBool('isLoggedIn') == null)
+      ? false
+      : prefs.getBool('isLoggedIn');
+  HttpOverrides.global = new MyHttpOverrides();
   runApp(MaterialApp(
     theme: AppTheme.light,
     darkTheme: AppTheme.dark,
     themeMode: ThemeMode.system,
     debugShowCheckedModeBanner: false,
     builder: EasyLoading.init(),
-    initialRoute: 'mainScreen',
+    //home: isLoggedIn ? Home() : LoginPage(),
+    initialRoute: isLoggedIn ? 'mainScreen' : 'login',
     routes: {
       'login': (context) => LoginPage(),
       'signup': (context) => SignUpPage(),
@@ -27,12 +34,14 @@ void main() {
       'opt': (context) => Opt(),
       'changePassword': (context) => ChangePassword(),
       'home': (context) => Home(),
-      'mainScreen':(context) => BottomBar(),
+      'mainScreen': (context) => BottomBar(),
       'musicList': (context) => SongsList(),
+
       //'musicPlayer': (context) => SongScreen(),
     },
   ));
 }
+
 void configLoading() {
   EasyLoading.instance
     ..displayDuration = const Duration(milliseconds: 2000)
@@ -47,13 +56,13 @@ void configLoading() {
     ..maskColor = Colors.blue.withOpacity(0.5)
     ..userInteractions = true
     ..dismissOnTap = false;
-    
 }
 
-class MyHttpOverrides extends HttpOverrides{
+class MyHttpOverrides extends HttpOverrides {
   @override
-  HttpClient createHttpClient(SecurityContext context){
+  HttpClient createHttpClient(SecurityContext context) {
     return super.createHttpClient(context)
-      ..badCertificateCallback = (X509Certificate cert, String host, int port)=> true;
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
   }
 }

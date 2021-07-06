@@ -1,5 +1,10 @@
+import 'dart:async';
+
+import 'package:emp/api/response.dart';
 import 'package:emp/layout/SizeConfig.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingScreen extends StatefulWidget {
   @override
@@ -7,6 +12,13 @@ class SettingScreen extends StatefulWidget {
 }
 
 class _SettingScreenState extends State<SettingScreen> {
+  Timer _timer;
+  var user;
+  getUserInfo() async {
+    user = await Utils().user();
+    return user;
+  }
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -33,12 +45,25 @@ class _SettingScreenState extends State<SettingScreen> {
           SizedBox(
             height: SizeConfig.screenHeight * 0.02,
           ),
-          Text(
-            "@Username",
-            style: Theme.of(context).textTheme.headline1.copyWith(
-                  fontSize: SizeConfig.screenWidth * 0.06,
-                ),
-          ),
+          FutureBuilder(
+              future: getUserInfo(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return Text(
+                    snapshot.data['first_name'] +
+                        " " +
+                        snapshot.data['last_name'],
+                    style: Theme.of(context).textTheme.headline1.copyWith(
+                          fontSize: SizeConfig.screenWidth * 0.06,
+                        ),
+                  );
+                } else {
+                  return new Text("@null",
+                      style: Theme.of(context).textTheme.headline1.copyWith(
+                            fontSize: SizeConfig.screenWidth * 0.06,
+                          ));
+                }
+              }),
           SizedBox(
             height: SizeConfig.screenHeight * 0.04,
           ),
@@ -129,7 +154,15 @@ class _SettingScreenState extends State<SettingScreen> {
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15)),
               color: Theme.of(context).dividerColor,
-              onPressed: () {},
+              onPressed: () async {
+                Utils().logout();
+
+                SharedPreferences prefs = await SharedPreferences.getInstance();
+                prefs.clear();
+                _timer?.cancel();
+                await EasyLoading.showSuccess("You've been logged out!");
+                Navigator.popAndPushNamed(context, 'login');
+              },
               child: Row(
                 children: [
                   Icon(

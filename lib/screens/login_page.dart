@@ -7,6 +7,7 @@ import 'package:emp/screens/signup_page.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key key}) : super(key: key);
@@ -130,6 +131,8 @@ class _LoginPageState extends State<LoginPage> {
                             print(_email.text);
                             print(_password.text);
                           });
+                          final SharedPreferences prefs =
+                              await SharedPreferences.getInstance();
                           _timer?.cancel();
                           await EasyLoading.show(
                             status: 'loading...',
@@ -150,6 +153,9 @@ class _LoginPageState extends State<LoginPage> {
                             await EasyLoading.showError(response['message']);
                           } else {
                             _timer?.cancel();
+                            prefs.setBool('isLoggedIn', true);
+                            prefs.setString('token', response['token']);
+                            prefs.setInt('id', response['user']['id']);
                             await EasyLoading.showSuccess(response['message']);
                             Navigator.pushNamed(context, 'mainScreen');
                           }

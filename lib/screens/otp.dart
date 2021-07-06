@@ -110,7 +110,9 @@ class _OptState extends State<Opt> {
                         } else {
                           _timer?.cancel();
                           await EasyLoading.showSuccess(response['message']);
-                          Navigator.pushNamed(context, 'changePassword');
+                          
+                          Navigator.pushNamed(context, 'changePassword',
+                            arguments: {'token': controller.text});
                         }
                       }
                     },

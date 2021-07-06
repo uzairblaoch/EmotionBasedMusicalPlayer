@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:emp/Models/searchSongs.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Utils {
   final String baseUrl = 'ebmp.codingoverflow.com';
@@ -73,6 +74,80 @@ class Utils {
     } else if (response.statusCode == 400) {
       final responseString = response.body;
       print(responseString);
+      return jsonDecode(responseString);
+    }
+  }
+
+  reset(String token, String password, String password_confirm) async {
+    var url = Uri.http(baseUrl, '/api/checkToken', {'q': 'dart'});
+    final response = await http.post(url, body: {
+      'token': token,
+      'password': password,
+      'password_confirm': password_confirm
+    });
+
+    print(response);
+    if (response.statusCode == 200) {
+      final responseString = response.body;
+      print(responseString);
+      return jsonDecode(responseString);
+    } else if (response.statusCode == 400) {
+      final responseString = response.body;
+      print(responseString);
+      return jsonDecode(responseString);
+    }
+  }
+
+  user() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString('token');
+    var url = Uri.http(baseUrl, '/api/user', {'q': 'dart'});
+    final response = await http.get(url, headers: {
+      'Authorization': 'Bearer $token',
+    });
+    if (response.statusCode == 200) {
+      final responseString = response.body;
+      // print(responseString);
+      return jsonDecode(responseString);
+    } else if (response.statusCode == 400) {
+      final responseString = response.body;
+      // print(responseString);
+      return jsonDecode(responseString);
+    }
+    if (response.statusCode == 404) {
+      final responseString = response.body;
+      //print(responseString);
+      return jsonDecode(responseString);
+    } else if (response.statusCode == 500) {
+      final responseString = response.body;
+      // print(responseString);
+      return jsonDecode(responseString);
+    }
+  }
+
+  logout() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString('token');
+    var url = Uri.http(baseUrl, '/api/logout', {'q': 'dart'});
+    final response = await http.get(url, headers: {
+      'Authorization': 'Bearer $token',
+    });
+    if (response.statusCode == 200) {
+      final responseString = response.body;
+      // print(responseString);
+      return jsonDecode(responseString);
+    } else if (response.statusCode == 400) {
+      final responseString = response.body;
+      // print(responseString);
+      return jsonDecode(responseString);
+    }
+    if (response.statusCode == 404) {
+      final responseString = response.body;
+      //print(responseString);
+      return jsonDecode(responseString);
+    } else if (response.statusCode == 500) {
+      final responseString = response.body;
+      // print(responseString);
       return jsonDecode(responseString);
     }
   }
