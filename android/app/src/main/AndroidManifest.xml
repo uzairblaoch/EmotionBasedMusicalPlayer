@@ -4,6 +4,7 @@
         android:label="emp"
         android:icon="@mipmap/ic_launcher"
         android:usesCleartextTraffic="true">
+        
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
@@ -40,4 +41,5 @@
             android:value="2" />
     </application>
      <uses-permission android:name="android.permission.INTERNET" />
+     <uses-permission android:name="android.permission.WAKE_LOCK" />
 </manifest>

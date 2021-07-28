@@ -1,21 +1,37 @@
+import 'package:audioplayers/audioplayers.dart';
+import 'package:emp/layout/SizeConfig.dart';
 import 'package:emp/screens/musicPlayer/musicPlayer.dart';
 import 'package:flutter/material.dart';
 
-class SongItem extends StatelessWidget {
+class SongItem extends StatefulWidget {
   final title;
   final artist;
   final image;
   final songLink;
   SongItem(this.title, this.artist, this.image, this.songLink);
+
+  @override
+  _SongItemState createState() => _SongItemState();
+}
+
+class _SongItemState extends State<SongItem> {
+  AudioPlayer audioPlayer;
+  @override
+  void initState() {
+    super.initState();
+    audioPlayer = AudioPlayer();
+  }
+
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     return InkWell(
       onTap: () {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) =>
-                  musicPlayer(title, artist, image, songLink)),
+              builder: (context) => musicPlayer(audioPlayer, widget.title,
+                  widget.artist, widget.image, widget.songLink)),
         );
       },
       child: Padding(
@@ -30,50 +46,50 @@ class SongItem extends StatelessWidget {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(8.0),
                     child: Image.network(
-                      image,
+                      widget.image,
                       fit: BoxFit.cover,
                     ),
                   ),
                 ),
                 Container(
-                    height: 80.0,
-                    width: 80.0,
+                    height: SizeConfig.screenHeight * 0.11,
+                    width: SizeConfig.screenWidth * 0.18,
                     child: Icon(
                       Icons.play_circle_filled,
                       color: Colors.white.withOpacity(0.7),
-                      size: 42.0,
+                      size: SizeConfig.screenWidth * 0.11,
                     ))
               ],
             ),
-            SizedBox(width: 16.0),
+            SizedBox(width: SizeConfig.screenWidth * 0.04),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    title,
+                    widget.title,
                     maxLines: 1,
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20.0),
+                    style: Theme.of(context).textTheme.bodyText1.copyWith(
+                          fontSize: SizeConfig.screenWidth * 0.04,
+                        ),
                   ),
-                  SizedBox(height: 8.0),
+                  SizedBox(height: SizeConfig.screenWidth * 0.02),
                   Text(
-                    artist,
+                    widget.artist,
                     maxLines: 1,
-                    style: TextStyle(
-                        color: Colors.white.withOpacity(0.5), fontSize: 16.0),
+                    style: Theme.of(context).textTheme.caption.copyWith(
+                          fontSize: SizeConfig.screenWidth * 0.035,
+                        ),
                   ),
                 ],
               ),
             ),
             Spacer(),
-            Icon(
+            /*Icon(
               Icons.more_horiz,
               color: Colors.white.withOpacity(0.6),
               size: 32.0,
-            )
+            )*/
           ],
         ),
       ),

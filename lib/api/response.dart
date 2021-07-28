@@ -152,8 +152,8 @@ class Utils {
     }
   }
 
-  Future<SearchSongs> fetchSongs() async {
-    var url = Uri.parse('https://api.deezer.com/search?q=hindi songs');
+  Future<SearchSongs> fetchSongs(String mood) async {
+    var url = Uri.parse('https://api.deezer.com/search?q=${mood}');
     final response = await http.get(url);
     //print(response.body);
     return SearchSongs.fromJson(jsonDecode(response.body));

@@ -1,26 +1,64 @@
-import 'package:audio_manager/audio_manager.dart';
+import 'package:audioplayers/audioplayers.dart';
+import 'package:emp/layout/SizeConfig.dart';
 import 'package:flutter/material.dart';
 
-class musicPlayer extends StatelessWidget {
+class musicPlayer extends StatefulWidget {
   final title;
   final artist;
   final image;
   final songLink;
-  musicPlayer(this.title, this.artist, this.image, this.songLink);
+  final AudioPlayer audioPlayer;
+  musicPlayer(
+      this.audioPlayer, this.title, this.artist, this.image, this.songLink);
+
+  @override
+  _musicPlayerState createState() => _musicPlayerState();
+}
+
+class _musicPlayerState extends State<musicPlayer> {
+  Duration _duration = Duration();
+  Duration _position = Duration();
+  bool isPlaying = false;
+  bool isPaused = false;
+
+  @override
+  void initState() {
+    super.initState();
+    this.widget.audioPlayer.onDurationChanged.listen((d) {
+      if (mounted) {
+        setState(() {
+          _duration = d;
+        });
+      }
+    });
+    this.widget.audioPlayer.onAudioPositionChanged.listen((p) {
+      if (mounted) {
+        setState(() {
+          _position = p;
+        });
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     return Scaffold(
-      backgroundColor: Colors.black38,
+      backgroundColor:
+          MediaQuery.of(context).platformBrightness == Brightness.dark
+              ? Colors.black
+              : Colors.white,
       body: Column(
         children: <Widget>[
           Container(
-            height: 500.0,
+            height: SizeConfig.screenHeight * 0.68,
             child: Stack(
               children: <Widget>[
                 Container(
                   decoration: BoxDecoration(
                       image: DecorationImage(
-                          image: NetworkImage(image), fit: BoxFit.cover)),
+                          image: NetworkImage(widget.image),
+                          fit: BoxFit.cover)),
                 ),
                 Container(
                   decoration: BoxDecoration(
@@ -34,7 +72,7 @@ class musicPlayer extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 12.0),
                   child: Column(
                     children: <Widget>[
-                      SizedBox(height: 52.0),
+                      SizedBox(height: SizeConfig.screenHeight * 0.04),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
@@ -73,7 +111,7 @@ class musicPlayer extends StatelessWidget {
                         ],
                       ),
                       Spacer(),
-                      Text(title,
+                      Text(widget.title,
                           style: TextStyle(
                               color: Colors.white.withOpacity(0.9),
                               fontWeight: FontWeight.bold,
@@ -82,7 +120,7 @@ class musicPlayer extends StatelessWidget {
                         height: 6.0,
                       ),
                       Text(
-                        artist,
+                        widget.artist,
                         style: TextStyle(
                             color: Colors.white.withOpacity(0.6),
                             fontSize: 18.0),
@@ -94,75 +132,114 @@ class musicPlayer extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(height: 42.0),
-          Slider(
-              onChanged: (double value) {},
-              value: 0.2,
-              activeColor: Colors.blue),
+          SizedBox(height: 15.0),
+          slider(),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Text(
-                  '2:10',
-                  style: TextStyle(color: Colors.white.withOpacity(0.7)),
+                  _position.toString().split(".")[0],
+                  style: Theme.of(context).textTheme.caption.copyWith(
+                        fontSize: SizeConfig.screenWidth * 0.034,
+                      ),
                 ),
-                Text('-03:56',
-                    style: TextStyle(color: Colors.white.withOpacity(0.7)))
+                Text(
+                  _duration.toString().split(".")[0],
+                  style: Theme.of(context).textTheme.caption.copyWith(
+                        fontSize: SizeConfig.screenWidth * 0.034,
+                      ),
+                )
               ],
             ),
           ),
-          SizedBox(height: 50.0),
+          SizedBox(height: SizeConfig.screenHeight * 0.025),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Icon(
                 Icons.fast_rewind,
-                color: Colors.white54,
-                size: 42.0,
+                color:
+                    MediaQuery.of(context).platformBrightness == Brightness.dark
+                        ? Colors.white
+                        : Colors.black38,
+                size: SizeConfig.screenWidth * 0.1,
               ),
-              SizedBox(width: 32.0),
+              SizedBox(width: SizeConfig.screenWidth * 0.1),
               Container(
                 decoration: BoxDecoration(
-                    color: Colors.blue,
+                    color: MediaQuery.of(context).platformBrightness ==
+                            Brightness.dark
+                        ? Colors.white
+                        : Colors.black,
                     borderRadius: BorderRadius.circular(50.0)),
                 child: InkWell(
-                  onTap: () {
-                    // Initial playback. Preloaded playback information
-                    AudioManager.instance
-                        .start(
-                            songLink,
-                            // "network format resource"
-                            // "local resource (file://${file.path})"
-                            "title",
-                            desc: "desc",
-                            // cover: "network cover image resource"
-                            cover: "assets/ic_launcher.png")
-                        .then((err) {
-                      print(err);
-                    });
+                  onTap: () async {
+                    if (isPlaying == false) {
+                      this.widget.audioPlayer.play(widget.songLink);
+                      setState(() {
+                        isPlaying = true;
+                      });
+                    } else if (isPlaying == true) {
+                      this.widget.audioPlayer.pause();
+                      setState(() {
+                        isPlaying = false;
+                      });
+                    }
                   },
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Icon(
-                      Icons.play_arrow,
-                      size: 58.0,
-                      color: Colors.white,
+                      isPlaying ? Icons.pause : Icons.play_arrow,
+                      size: SizeConfig.screenWidth * 0.15,
+                      color: MediaQuery.of(context).platformBrightness ==
+                              Brightness.dark
+                          ? Colors.black
+                          : Colors.white,
                     ),
                   ),
                 ),
               ),
-              SizedBox(width: 32.0),
+              SizedBox(width: SizeConfig.screenWidth * 0.1),
               Icon(
                 Icons.fast_forward,
-                color: Colors.white54,
-                size: 42.0,
+                color:
+                    MediaQuery.of(context).platformBrightness == Brightness.dark
+                        ? Colors.white
+                        : Colors.black38,
+                size: SizeConfig.screenWidth * 0.1,
               )
             ],
           ),
         ],
       ),
     );
+  }
+
+  Widget slider() {
+    return Slider(
+      activeColor: MediaQuery.of(context).platformBrightness == Brightness.dark
+          ? Colors.white
+          : Colors.black,
+      inactiveColor:
+          MediaQuery.of(context).platformBrightness == Brightness.dark
+              ? Colors.white24
+              : Colors.black12,
+      value: _position.inSeconds.toDouble(),
+      min: 0.0,
+      max: _duration.inSeconds.toDouble(),
+      onChanged: (double value) {
+        setState(() {
+          changeToSecond(value.toInt());
+          value = value;
+        });
+      },
+    );
+  }
+
+  void changeToSecond(int second) {
+    Duration newDuration = Duration(seconds: second);
+    this.widget.audioPlayer.seek(newDuration);
   }
 }

@@ -157,7 +157,9 @@ class _LoginPageState extends State<LoginPage> {
                             prefs.setString('token', response['token']);
                             prefs.setInt('id', response['user']['id']);
                             await EasyLoading.showSuccess(response['message']);
-                            Navigator.pushNamed(context, 'mainScreen');
+                            //Navigator.pushNamed(context, 'mainScreen');
+                            Navigator.of(context).pushNamedAndRemoveUntil(
+                                'mainScreen', (Route<dynamic> route) => false);
                           }
                         }
                       },

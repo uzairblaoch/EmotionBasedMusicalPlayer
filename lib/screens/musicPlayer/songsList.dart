@@ -1,5 +1,6 @@
 import 'package:emp/Models/searchSongs.dart';
 import 'package:emp/api/response.dart';
+import 'package:emp/layout/SizeConfig.dart';
 import 'package:emp/screens/musicPlayer/model/songModel.dart';
 import 'package:emp/screens/musicPlayer/widgets/customField.dart';
 import 'package:flutter/material.dart';
@@ -11,76 +12,92 @@ class SongsList extends StatefulWidget {
 
 class _SongsListState extends State<SongsList> {
   Future<SearchSongs> searchSongs;
-
+  var mood;
   @override
   void initState() {
     super.initState();
-    searchSongs = Utils().fetchSongs();
+    //searchSongs = Utils().fetchSongs();
   }
-
-  var flume =
-      'https://i.scdn.co/image/8d84f7b313ca9bafcefcf37d4e59a8265c7d3fff';
-
-  var martinGarrix =
-      'https://c1.staticflickr.com/2/1841/44200429922_d0cbbf22ba_b.jpg';
-
-  var rosieLowe =
-      'https://i.scdn.co/image/db8382f6c33134111a26d4bf5a482a1caa5f151c';
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
+    final arguments = ModalRoute.of(context).settings.arguments as Map;
+    if (arguments != null) {
+      mood = arguments['mood'];
+    } else {
+      mood = "sad";
+    }
+    // print(arguments['mood']);
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor:
+            MediaQuery.of(context).platformBrightness == Brightness.dark
+                ? Colors.black12
+                : Colors.white,
+        leading: BackButton(
+            color: MediaQuery.of(context).platformBrightness == Brightness.dark
+                ? Colors.white
+                : Colors.black),
+        title: Text(
+          "Songs",
+          style: Theme.of(context).textTheme.bodyText1.copyWith(
+                fontSize: SizeConfig.screenWidth * 0.044,
+              ),
+        ),
+        // centerTitle: true,
+      ),
       backgroundColor: Colors.black38,
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            SizedBox(height: 70.0),
-            CustomTextField(),
-            SizedBox(height: 25.0),
-            Text(
-              'Recommend',
-              style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 32.0),
-            ),
-            SizedBox(
-              height: 20.0,
-            ),
-            Expanded(
-              child: FutureBuilder<SearchSongs>(
-                  future: Utils().fetchSongs(),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      return ListView.builder(
-                          itemCount: snapshot.data?.data?.length,
-                          itemBuilder: (BuildContext context, index) {
-                            return SongItem(
-                                snapshot.data.data[index].titleShort,
-                                snapshot.data.data[index].artist.name,
-                                snapshot.data.data[index].artist.pictureBig,
-                                snapshot.data.data[index].preview);
-                          });
-                    }
-                    return Center(
-                      child: CircularProgressIndicator(
-                        valueColor: new AlwaysStoppedAnimation<Color>(
-                            Color.fromRGBO(216, 56, 48, 1)),
-                      ),
-                    );
-                  }),
-              /* SongItem('In the Name of Love', 'Martin Garrix', martinGarrix),
-                SongItem('Never Be Like You', 'Flume', flume),
-                SongItem('Worry Bout Us', 'Rosie Lowe', rosieLowe),
-                SongItem('In the Name of Love', 'Martin Garrix', martinGarrix),
-                SongItem('In the Name of Love', 'Martin Garrix', martinGarrix),
-                SongItem('Worry Bout Us', 'Rosie Lowe', rosieLowe),
-                SongItem('In the Name of Love', 'Martin Garrix', martinGarrix),
-                SongItem('In the Name of Love', 'Martin Garrix', martinGarrix),*/
-            )
-          ],
+      body: Container(
+        decoration: BoxDecoration(
+            color: MediaQuery.of(context).platformBrightness == Brightness.dark
+                ? Colors.black12
+                : Colors.white), //////////
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              SizedBox(height: SizeConfig.screenHeight * 0.02),
+              CustomTextField(),
+              SizedBox(height: SizeConfig.screenHeight * 0.03),
+              Text(
+                'Recommend',
+                style: Theme.of(context).textTheme.bodyText1.copyWith(
+                      fontSize: SizeConfig.screenWidth * 0.065,
+                    ),
+              ),
+              SizedBox(
+                height: SizeConfig.screenHeight * 0.02,
+              ),
+              Expanded(
+                child: FutureBuilder<SearchSongs>(
+                    future: Utils().fetchSongs(mood),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return ListView.builder(
+                            itemCount: snapshot.data?.data?.length,
+                            itemBuilder: (BuildContext context, index) {
+                              return SongItem(
+                                  snapshot.data.data[index].titleShort,
+                                  snapshot.data.data[index].artist.name,
+                                  snapshot.data.data[index].artist.pictureBig,
+                                  snapshot.data.data[index].preview);
+                            });
+                      }
+                      return Center(
+                        child: CircularProgressIndicator(
+                          valueColor: new AlwaysStoppedAnimation<Color>(
+                              MediaQuery.of(context).platformBrightness ==
+                                      Brightness.dark
+                                  ? Colors.white
+                                  : Colors.black),
+                        ),
+                      );
+                    }),
+              )
+            ],
+          ),
         ),
       ),
     );

@@ -15,6 +15,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  var mood;
   File _imageFile;
   List _identifiedResult;
   @override
@@ -160,14 +161,50 @@ class _HomeState extends State<Home> {
                           ]
                         : []),
               ),
-              TextButton(
+              /*TextButton(
                 onPressed: () async {
-                  Navigator.popAndPushNamed(context, 'musicList');
+                  Navigator.pushNamed(context, 'musicList');
                   // var response = await Utils().fetchSongs();
                   //print(response);
                 },
-                child: const Text('player_list'),
-              )
+                child: const Text(
+                  'Recommended Songs',
+                  style: TextStyle(
+                      color: Colors.white, backgroundColor: Colors.red),
+                ),
+              ),*/
+              SingleChildScrollView(
+                child: Column(
+                  children: _identifiedResult != null
+                      ? [
+                          InkWell(
+                            onTap: () {
+                              //${_identifiedResult[0]["label"]}
+                              Navigator.pushNamed(context, 'musicList',
+                                  arguments: {
+                                    'mood': "${_identifiedResult[0]["label"]}"
+                                  });
+                            },
+                            child: Card(
+                              elevation: 1.0,
+                              child: Container(
+                                width: 200,
+                                margin: EdgeInsets.all(10),
+                                child: Center(
+                                  child: Text(
+                                    "Recommended Songs",
+                                    style: TextStyle(
+                                        fontSize: 18.0,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ]
+                      : [],
+                ),
+              ),
             ],
           ),
         ),
